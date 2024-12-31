@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Dialog, DialogPanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
-import Logo from "../../public/logo.png"
+import Logo from "../../public/logo-hidroxiapatite.png"
 
 const navigation = [
   { name: 'HOME', href: 'https://www.futerman.com.ar/' },
@@ -24,15 +24,10 @@ export default function Example() {
       <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
         <div className="flex items-center gap-x-12">
           <a href="https://www.futerman.com.ar/" className="-m-1.5 p-1.5 flex">
-            <span className="sr-only">Allanmar International Company SRL
+            <span className="sr-only">Cientific Hidroxiapatite 350
             </span>
-            <Image src={Logo} alt="Allanmar International Company SRL" width={96}/> 
-            {/* <img
-              alt=""
-              src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
-              className="h-8 w-auto"
-            /> */}
-            <h1 className='text-white font-semibold'>Futerman <br /> International <br /> Products</h1>
+            <Image src={Logo} alt="Cientific Hidroxiapatite 350" width={120}/> 
+            {/* <h1 className='text-white font-semibold'>Futerman <br /> International <br /> Products</h1> */}
           </a>
           <div className="hidden lg:flex lg:gap-x-12">
             {navigation.map((item) => (
@@ -87,14 +82,6 @@ export default function Example() {
                     {item.name}
                   </a>
                 ))}
-              </div>
-              <div className="py-6">
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
-                >
-                  Log in
-                </a>
               </div>
             </div>
           </div>
