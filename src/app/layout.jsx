@@ -10,13 +10,20 @@ const montserrat = Montserrat({
 });
 
 export const metadata = {
-  title:  'Cientific Hidroxiapatita | Futerman International Products',
+  title: 'Cientific Hidroxiapatita | Futerman International Products',
   description: "Somos el único laboratorio sudamericano que diseña y elabora dispositivos médicos en base a ácido hialurónico reticulado e hidroxiapatita de calcio",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        {/* Favicon */}
+        <link rel="icon" href="/favicon.ico" />
+        {/* Metadata (opcional, si usas metadata en las páginas) */}
+        <title>{metadata.title}</title>
+        <meta name="description" content={metadata.description} />
+      </head>
 
       {/* <Script
         async
