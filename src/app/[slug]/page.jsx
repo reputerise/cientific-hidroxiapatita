@@ -95,7 +95,7 @@ export default function BlogPost({ params }) {
         );
     }
 
-    let  previousPathname  = "https://cientific-hidroxiapatita.vercel.app/"
+    let  previousPathname  = "https://blog.cientific.com.ar/"
 
 
     return (
