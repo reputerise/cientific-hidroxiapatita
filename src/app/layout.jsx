@@ -1,8 +1,8 @@
 import { Montserrat } from "next/font/google";
 import "./globals.css";
-import Footer from "../components/Footer"
+import Footer from "../components/Footer";
 import Header from "../components/Header";
-import Script from 'next/script';
+import Script from "next/script";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -10,8 +10,9 @@ const montserrat = Montserrat({
 });
 
 export const metadata = {
-  title: 'Cientific Hidroxiapatita | Futerman International Products',
-  description: "Somos el único laboratorio sudamericano que diseña y elabora dispositivos médicos en base a ácido hialurónico reticulado e hidroxiapatita de calcio",
+  title: "Cientific Hidroxiapatita | Futerman International Products",
+  description:
+    "Somos el único laboratorio sudamericano que diseña y elabora dispositivos médicos en base a ácido hialurónico reticulado e hidroxiapatita de calcio",
 };
 
 export default function RootLayout({ children }) {
@@ -20,27 +21,33 @@ export default function RootLayout({ children }) {
       <head>
         {/* Favicon */}
         <link rel="icon" href="/favicon.ico" />
-        {/* Metadata (opcional, si usas metadata en las páginas) */}
+        {/* Metadata */}
         <title>{metadata.title}</title>
         <meta name="description" content={metadata.description} />
+
+        {/* Google Tag Manager (script) */}
+        <Script id="gtm-script" strategy="afterInteractive">
+          {`
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-P5WJX7FZ');
+          `}
+        </Script>
       </head>
 
-      {/* <Script
-        async
-        src="https://www.googletagmanager.com/gtag/js?id=G-GHPS101LNJ"
-      />
-
-      <Script id="google-analytics">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-GHPS101LNJ');
-        `}
-      </Script> */}
-
-
       <body className={`${montserrat.className} montserrat relative`}>
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-P5WJX7FZ"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          ></iframe>
+        </noscript>
+
         <Header />
         {children}
         <Footer />
