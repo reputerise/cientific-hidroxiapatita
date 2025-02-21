@@ -35,6 +35,20 @@ export default function RootLayout({ children }) {
             })(window,document,'script','dataLayer','GTM-P5WJX7FZ');
           `}
         </Script>
+
+        <Script
+          strategy="afterInteractive"
+          src={`https://www.googletagmanager.com/gtag/js?id=G-GJVYW6K9PX`}
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-GJVYW6K9PX');
+          `}
+        </Script>
+
       </head>
 
       <body className={`${montserrat.className} montserrat relative`}>
