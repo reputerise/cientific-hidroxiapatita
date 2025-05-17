@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
         <title>{metadata.title}</title>
         <meta name="description" content={metadata.description} />
 
-        {/* Google Tag Manager (script) */}
+        {/* Google Tag Manager */}
         <Script id="gtm-script" strategy="afterInteractive">
           {`
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -36,9 +36,10 @@ export default function RootLayout({ children }) {
           `}
         </Script>
 
+        {/* Google Analytics */}
         <Script
           strategy="afterInteractive"
-          src={`https://www.googletagmanager.com/gtag/js?id=G-GJVYW6K9PX`}
+          src="https://www.googletagmanager.com/gtag/js?id=G-GJVYW6K9PX"
         />
         <Script id="google-analytics" strategy="afterInteractive">
           {`
@@ -46,6 +47,20 @@ export default function RootLayout({ children }) {
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', 'G-GJVYW6K9PX');
+          `}
+        </Script>
+
+        {/* Google Ads Conversion Tracking */}
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=AW-16973635260"
+        />
+        <Script id="google-ads" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-16973635260');
           `}
         </Script>
 
