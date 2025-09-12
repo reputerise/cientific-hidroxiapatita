@@ -13,6 +13,9 @@ export const metadata = {
   title: "Cientific Hidroxiapatita | Futerman International Products",
   description:
     "Somos el único laboratorio sudamericano que diseña y elabora dispositivos médicos en base a ácido hialurónico reticulado e hidroxiapatita de calcio",
+    alternates: {
+      canonical: "https://blog.cientific.com.ar",  
+    },
 };
 
 export default function RootLayout({ children }) {

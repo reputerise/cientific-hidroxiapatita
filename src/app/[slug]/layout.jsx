@@ -3,6 +3,7 @@ import Script from "next/script";
 
 export async function generateMetadata({ params }) {
     const postMetadata = await fetchMetadata(params.slug);
+    const canonicalUrl = `https://blog.cientific.com.ar/${params.slug}`;
 
     return {
         title: postMetadata.title,
@@ -19,7 +20,10 @@ export async function generateMetadata({ params }) {
             title: postMetadata.title,
             description: postMetadata.description,
             images: [postMetadata.image],
-        }
+        },
+        alternates: {
+            canonical: canonicalUrl,
+        },
     };
 }
 
