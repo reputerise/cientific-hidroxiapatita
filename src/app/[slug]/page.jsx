@@ -47,7 +47,7 @@ export default function BlogPost({ params }) {
 
         async function fetchData() {
             try {
-                const query = `*[_type == "post" && slug.current == $slug][0]{
+                const query = `*[_type == "post" && "Hidroxiapatita" in categories[]->title && slug.current == $slug][0]{
                     title,
                     body,
                     mainImage{
