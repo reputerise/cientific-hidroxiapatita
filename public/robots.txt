@@ -6,4 +6,4 @@ Allow: /
 Host: https://blog.cientific.com.ar/
 
 # Sitemaps
-Sitemap: https://blog.cientific.com.ar/sitemap.xml
+Sitemap: https://blog.cientific.com.ar/sitemap-0.xml
