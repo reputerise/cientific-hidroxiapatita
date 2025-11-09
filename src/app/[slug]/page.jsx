@@ -1,9 +1,9 @@
-'use client';
-
 import { client } from '../../../sanity/lib/client';
-import { useEffect, useState } from 'react';
-import Head from 'next/head';
 import { fetchMetadata } from '../../components/blog/fetchMetadata';
+import Link from "next/link";
+
+
+export const dynamic = 'force-static'; // ✅ garantiza pre-renderizado estático
 
 function ArrowLeftIcon(props) {
     return (
@@ -15,201 +15,116 @@ function ArrowLeftIcon(props) {
                 strokeLinejoin="round"
             />
         </svg>
-    )
+    );
 }
+
 function formatDate(dateString) {
-    console.log("fecha ", dateString)
-    return new Date(`${dateString}`).toLocaleDateString('en-US', {
+    return new Date(`${dateString}`).toLocaleDateString('es-AR', {
         day: 'numeric',
         month: 'long',
         year: 'numeric',
         timeZone: 'UTC',
-    })
+    });
 }
 
+export default async function BlogPost({ params }) {
+    const { slug } = params;
 
+    // 🔍 Fetch directo desde Sanity (server-side)
+    const query = `*[_type == "post" && slug.current == $slug][0]{
+    title,
+    body,
+    mainImage{
+      asset->{
+        _id,
+        url
+      },
+      alt,
+      title
+    },
+    metaDescription,
+    publishedAt
+  }`;
 
-export default function BlogPost({ params }) {
-    const [post, setPost] = useState(null);
-    const [metadata, setMetadata] = useState({ title: 'Loading...', description: 'Loading...' });
-    const [slug, setSlug] = useState(null);
+    const post = await client.fetch(query, { slug });
 
-    useEffect(() => {
-        async function unwrapParams() {
-            const resolvedParams = await params;
-            setSlug(resolvedParams.slug);
-        }
-        unwrapParams();
-    }, [params]);
-
-    useEffect(() => {
-        if (!slug) return;
-
-        async function fetchData() {
-            try {
-                const query = `*[_type == "post" && "Hidroxiapatita" in categories[]->title && slug.current == $slug][0]{
-                    title,
-                    body,
-                    mainImage{
-                        asset->{
-                            _id,
-                            url,
-                        },
-                        alt,
-                        title
-                    },
-                    metaDescription,
-                    publishedAt
-                }`;
-
-                const post = await client.fetch(query, { slug });
-                setPost(post);
-
-                // Obtener los metadatos
-                const metadata = await fetchMetadata(slug);
-                setMetadata(metadata);
-            } catch (error) {
-                console.error('Error fetching post or metadata:', error);
-            }
-        }
-
-        fetchData();
-    }, [slug]);
-
-    const SANITY_BASE_URL = "https://cdn.sanity.io/images/c38gqpt0/production/";
+    if (!post) {
+        return <div className="text-center py-20">Post no encontrado.</div>;
+    }
 
     function constructImageUrl(ref) {
         if (!ref) return '';
         const cleanedRef = ref.replace(/^image-/, '').replace(/-jpg$/, '');
-        return `${SANITY_BASE_URL}${cleanedRef}.jpg`;
+        return `https://cdn.sanity.io/images/c38gqpt0/production/${cleanedRef}.jpg`;
     }
-
-    if (!post) {
-        return (
-            <div className='min-h-[100dvh] w-full flex flex-col justify-center items-center'>
-                <div className="w-12 h-12 relative flex justify-center items-center">
-                    <div className="w-full h-full rounded-full absolute border-4 border-solid border-sf-lime opacity-20"></div>
-                    <div className="w-full h-full rounded-full animate-spin absolute border-4 border-solid border-sf-lime border-t-transparent"></div>
-                </div>
-            </div>
-        );
-    }
-
-    let  previousPathname  = "https://blog.cientific.com.ar/"
-
 
     return (
-        <>
-            <Head>
-                <title>{metadata.title}</title>
-                <meta name="description" content={metadata.description} />
-            </Head>
-            <div className="mt-16 min-h-[100dvh]">
-                <div className="xl:relative">
-                    <div className="mx-auto max-w-2xl">
-                        {previousPathname && (
-                            <button
-                                type="button"
-                                onClick={() => (window.location.href = previousPathname)}
-                                aria-label="Go back to articles"
-                                className="group mb-8 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 transition lg:absolute lg:-left-5 lg:-mt-2 lg:mb-0 xl:-top-1.5 xl:left-40 xl:mt-0 dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0 dark:ring-white/10 dark:hover:border-zinc-700 dark:hover:ring-white/20"
-                            >
-                                <ArrowLeftIcon className="h-4 w-4 stroke-zinc-500 transition group-hover:stroke-zinc-700 dark:stroke-zinc-500 dark:group-hover:stroke-zinc-400" />
-                            </button>
-                        )}
-                        <article>
-                            <header className="flex flex-col">
+        <div className="mt-16 min-h-[100dvh]">
+            <div className="xl:relative">
+                <div className="mx-auto max-w-2xl">
+                    <Link
+                        href="/"
+                        aria-label="Volver al blog"
+                        className="group mb-8 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md ring-1 ring-zinc-900/5 transition"
+                    >
+                        <ArrowLeftIcon className="h-4 w-4 stroke-zinc-500 transition group-hover:stroke-zinc-700" />
+                    </Link>
 
-                                <time
-                                    dateTime={post.publishedAt}
-                                    className="order-first flex items-center text-base text-white dark:text-white"
-                                >
-                                    <span className="h-4 w-0.5 rounded-full bg-white dark:bg-white" />
-                                    <span className="ml-3">{formatDate(post.publishedAt)}</span>
-                                </time>
-                            </header>
-                            <div className="w-full flex flex-col overflow-x-hidden  flex flex-col justify-center items-center">
-                                <article className='my-12 flex flex-col items-start gap-5'>
-                                    <h1 className="font-bold text-4xl md:text-heading pb-4 leading-none text-center">{post.title}</h1>
-                                    {post.mainImage && (
-                                        <img
-                                            src={post.mainImage.asset.url}
-                                            alt={post.mainImage.alt}
-                                            title={post.mainImage.title}
-                                            className='md:w-1/2 self-center'
-                                        />
-                                    )}
-                                    <div className='flex flex-col items-start gap-5 self-center'>
-                                        {post.body && post.body.map((block, index) => {
-                                            if (block._type === 'block') {
-                                                switch (block.style) {
-                                                    case 'h1':
-                                                        return ""
-                                                    case 'h2':
-                                                        return <h2 key={index} className='col-span-12 mt-12 tracking-tighter leading-none text-2xl  font-bold'>{block.children[0]?.text || ''}</h2>;
-                                                    case 'h3':
-                                                        return <h3 key={index} className="text-xl leading-none reg-neue my-4 font-semibold">{block.children[0]?.text || ''}</h3>;
-                                                    case 'blockquote':
-                                                        return (
-                                                            <blockquote key={index} className="pl-4 border-l-4 border-sf-lime italic text-sf-cream py-4">
-                                                                {block.children && block.children.map((child) => (
-                                                                    <span key={child._key}>{child.text}</span>
-                                                                ))}
-                                                            </blockquote>
-                                                        );
-                                                    case 'normal':
-                                                        return (
-                                                            <p key={index}>
-                                                                {block.children && block.children.map((child, childIndex) => {
-                                                                    if (child.marks && child.marks.length > 0) {
-                                                                        const mark = block.markDefs.find(def => def._key === child.marks[0]);
-                                                                        if (mark && mark.href) {
-                                                                            return (
-                                                                                <a key={child._key} href={mark.href} className='text-sf-lime'>
-                                                                                    {child.text}
-                                                                                </a>
-                                                                            );
-                                                                        }
-                                                                        if (child.marks.includes('strong')) {
-                                                                            return (
-                                                                                <strong key={child._key}>
-                                                                                    {child.text}
-                                                                                </strong>
-                                                                            );
-                                                                        }
-                                                                    }
-                                                                    return (
-                                                                        <span key={child._key}>
-                                                                            {child.text}
-                                                                        </span>
-                                                                    );
-                                                                })}
-                                                            </p>
-                                                        );
-                                                }
-                                            } else if (block._type === 'image') {
-                                                const imageUrl = block.asset && block.asset._ref ? constructImageUrl(block.asset._ref) : '';
-                                                return (
-                                                    <img
-                                                        key={index}
-                                                        src={imageUrl}
-                                                        alt={block.alt || ''}
-                                                        title={block.title || ""}
-                                                        className='md:w-1/2 self-center'
-                                                        style={{ maxWidth: '100%' }}
-                                                    />
-                                                );
-                                            } else {
-                                                return null;
-                                            }
-                                        })}
-                                    </div>
-                                </article>
+                    <article>
+                        <header className="flex flex-col">
+                            <time
+                                dateTime={post.publishedAt}
+                                className="order-first flex items-center text-base text-zinc-700"
+                            >
+                                <span className="h-4 w-0.5 rounded-full bg-zinc-700" />
+                                <span className="ml-3">{formatDate(post.publishedAt)}</span>
+                            </time>
+                        </header>
+
+                        <div className="w-full flex flex-col items-center">
+                            <h1 className="font-bold text-4xl md:text-heading pb-4 leading-none text-center">
+                                {post.title}
+                            </h1>
+
+                            {post.mainImage && (
+                                <img
+                                    src={post.mainImage.asset.url}
+                                    alt={post.mainImage.alt}
+                                    title={post.mainImage.title}
+                                    className="md:w-1/2 self-center my-8"
+                                />
+                            )}
+
+                            <div className="flex flex-col gap-5">
+                                {post.body?.map((block, i) => {
+                                    if (block._type === 'block') {
+                                        const text = block.children.map((c) => c.text).join(' ');
+                                        switch (block.style) {
+                                            case 'h2':
+                                                return <h2 key={i} className="text-2xl font-bold mt-10">{text}</h2>;
+                                            case 'h3':
+                                                return <h3 key={i} className="text-xl font-semibold mt-6">{text}</h3>;
+                                            default:
+                                                return <p key={i} className="leading-relaxed">{text}</p>;
+                                        }
+                                    } else if (block._type === 'image') {
+                                        const imageUrl = block.asset?._ref ? constructImageUrl(block.asset._ref) : '';
+                                        return (
+                                            <img
+                                                key={i}
+                                                src={imageUrl}
+                                                alt={block.alt || ''}
+                                                title={block.title || ''}
+                                                className="md:w-1/2 self-center my-8"
+                                            />
+                                        );
+                                    }
+                                })}
                             </div>
-                        </article>
-                    </div>
+                        </div>
+                    </article>
                 </div>
             </div>
-        </>
+        </div>
     );
 }

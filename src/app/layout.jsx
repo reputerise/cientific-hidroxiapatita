@@ -13,20 +13,28 @@ export const metadata = {
   title: "Cientific Hidroxiapatita | Futerman International Products",
   description:
     "Somos el único laboratorio sudamericano que diseña y elabora dispositivos médicos en base a ácido hialurónico reticulado e hidroxiapatita de calcio",
-    alternates: {
-      canonical: "https://blog.cientific.com.ar",  
-    },
+  alternates: {
+    canonical: "https://blog.cientific.com.ar",
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <head>
-        {/* Favicon */}
-        <link rel="icon" href="/favicon.ico" />
-        {/* Metadata */}
-        <title>{metadata.title}</title>
-        <meta name="description" content={metadata.description} />
+    <html lang="es">
+      <body className={`${montserrat.className} montserrat relative`}>
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-P5WJX7FZ"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          ></iframe>
+        </noscript>
+
+        <Header />
+        {children}
+        <Footer />
 
         {/* Google Tag Manager */}
         <Script id="gtm-script" strategy="afterInteractive">
@@ -66,23 +74,6 @@ export default function RootLayout({ children }) {
             gtag('config', 'AW-16973635260');
           `}
         </Script>
-
-      </head>
-
-      <body className={`${montserrat.className} montserrat relative`}>
-        {/* Google Tag Manager (noscript) */}
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-P5WJX7FZ"
-            height="0"
-            width="0"
-            style={{ display: "none", visibility: "hidden" }}
-          ></iframe>
-        </noscript>
-
-        <Header />
-        {children}
-        <Footer />
       </body>
     </html>
   );
