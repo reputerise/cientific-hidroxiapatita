@@ -31,7 +31,7 @@ export default async function BlogPost({ params }) {
     const { slug } = params;
 
     // 🔍 Fetch directo desde Sanity (server-side)
-    const query = `*[_type == "post" && slug.current == $slug][0]{
+    const query = `*[_type == "post" && "Hidroxiapatita" in categories[]->title && slug.current == $slug][0]{
     title,
     body,
     mainImage{

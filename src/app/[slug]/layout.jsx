@@ -49,8 +49,8 @@ export default async function BlogLayout({ children, params }) {
         "dateModified": dateModified,
         "author": {
             "@type": "Person",
-            "name": "Marcelo Futerman",
-            "url": "https://blog.futerman.com.ar"
+            "name": "Allanmar International Company SRL",
+            "url": "https://blog.cientific.com.ar"
         },
         "publisher": {
             "@type": "Organization",
