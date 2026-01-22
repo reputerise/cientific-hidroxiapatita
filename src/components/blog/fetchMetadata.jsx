@@ -1,29 +1,25 @@
-import { client } from '../../../sanity/lib/client';
+import { client } from "../../../sanity/lib/client";
 
 export async function fetchMetadata(slug) {
-    const query = `*[
-        _type == "post" &&
-        slug.current == $slug &&
-        "Hidroxiapatita" in categories[]->title
-    ][0]{
-        title,
-        metaDescription,
-        mainImage{
-            asset->{
-                url
-            }
-        }
-    }`;
+  const query = `*[_type == "post" && "Hidroxiapatita" in categories[]->title && slug.current == $slug][0]{
+    title,
+    metaDescription,
+    mainImage{
+      asset->{url}
+    },
+    publishedAt,
+    _updatedAt
+  }`;
 
-    const post = await client.fetch(query, { slug });
+  const post = await client.fetch(query, { slug });
 
-    if (!post) {
-        return null;
-    }
+  if (!post) return null;
 
-    return {
-        title: post.title,
-        description: post.metaDescription,
-        image: post.mainImage?.asset?.url || null,
-    };
+  return {
+    title: post.title,
+    description: post.metaDescription,
+    image: post.mainImage?.asset?.url || null,
+    datePublished: post.publishedAt || null,
+    dateModified: post._updatedAt || null,
+  };
 }
