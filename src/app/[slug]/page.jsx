@@ -1,9 +1,8 @@
 import { client } from '../../../sanity/lib/client';
-import { fetchMetadata } from '../../components/blog/fetchMetadata';
-import Link from "next/link";
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
 
-
-export const dynamic = 'force-static'; // ✅ garantiza pre-renderizado estático
+export const dynamic = 'force-static';
 
 function ArrowLeftIcon(props) {
     return (
@@ -19,7 +18,7 @@ function ArrowLeftIcon(props) {
 }
 
 function formatDate(dateString) {
-    return new Date(`${dateString}`).toLocaleDateString('es-AR', {
+    return new Date(dateString).toLocaleDateString('es-AR', {
         day: 'numeric',
         month: 'long',
         year: 'numeric',
@@ -30,32 +29,29 @@ function formatDate(dateString) {
 export default async function BlogPost({ params }) {
     const { slug } = params;
 
-    // 🔍 Fetch directo desde Sanity (server-side)
-    const query = `*[_type == "post" && "Hidroxiapatita" in categories[]->title && slug.current == $slug][0]{
-    title,
-    body,
-    mainImage{
-      asset->{
-        _id,
-        url
-      },
-      alt,
-      title
-    },
-    metaDescription,
-    publishedAt
-  }`;
+    const query = `*[
+        _type == "post" &&
+        slug.current == $slug &&
+        "Hidroxiapatita" in categories[]->title
+    ][0]{
+        title,
+        body,
+        mainImage{
+            asset->{
+                url
+            },
+            alt,
+            title
+        },
+        metaDescription,
+        publishedAt
+    }`;
 
     const post = await client.fetch(query, { slug });
 
+    // ⛔ 404 real
     if (!post) {
-        return <div className="text-center py-20">Post no encontrado.</div>;
-    }
-
-    function constructImageUrl(ref) {
-        if (!ref) return '';
-        const cleanedRef = ref.replace(/^image-/, '').replace(/-jpg$/, '');
-        return `https://cdn.sanity.io/images/c38gqpt0/production/${cleanedRef}.jpg`;
+        notFound();
     }
 
     return (
@@ -82,15 +78,15 @@ export default async function BlogPost({ params }) {
                         </header>
 
                         <div className="w-full flex flex-col items-center">
-                            <h1 className="font-bold text-4xl md:text-heading pb-4 leading-none text-center">
+                            <h1 className="font-bold text-4xl pb-4 text-center">
                                 {post.title}
                             </h1>
 
                             {post.mainImage && (
                                 <img
                                     src={post.mainImage.asset.url}
-                                    alt={post.mainImage.alt}
-                                    title={post.mainImage.title}
+                                    alt={post.mainImage.alt || ''}
+                                    title={post.mainImage.title || ''}
                                     className="md:w-1/2 self-center my-8"
                                 />
                             )}
@@ -107,18 +103,8 @@ export default async function BlogPost({ params }) {
                                             default:
                                                 return <p key={i} className="leading-relaxed">{text}</p>;
                                         }
-                                    } else if (block._type === 'image') {
-                                        const imageUrl = block.asset?._ref ? constructImageUrl(block.asset._ref) : '';
-                                        return (
-                                            <img
-                                                key={i}
-                                                src={imageUrl}
-                                                alt={block.alt || ''}
-                                                title={block.title || ''}
-                                                className="md:w-1/2 self-center my-8"
-                                            />
-                                        );
                                     }
+                                    return null;
                                 })}
                             </div>
                         </div>
