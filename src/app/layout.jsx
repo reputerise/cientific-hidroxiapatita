@@ -17,10 +17,9 @@ export const metadata = {
     canonical: "https://blog.cientific.com.ar",
   },
   verification: {
-    google: "GmhsT1m6ozAmlRkz0AgoaVpF108WdMXUIvY9Hvlfbf8",
+    google: "DP2CJJ0XqoFqoqrL2ALJH-Br4EgYZgE8iKfo2Te1qlA",
   },
 };
-
 
 export default function RootLayout({ children }) {
   return (
