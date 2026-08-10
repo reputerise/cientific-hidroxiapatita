@@ -16,7 +16,11 @@ export const metadata = {
   alternates: {
     canonical: "https://blog.cientific.com.ar",
   },
+  verification: {
+    google: "GmhsT1m6ozAmlRkz0AgoaVpF108WdMXUIvY9Hvlfbf8",
+  },
 };
+
 
 export default function RootLayout({ children }) {
   return (
